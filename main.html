@@ -53,6 +53,7 @@
             background-color: #45a049;
         }
         .coffin {
+            display: none;
             position: absolute;
             bottom: -50px;
             left: 0;
@@ -92,17 +93,43 @@
             color: #555;
             font-size: 18px;
         }
+        .underage-warning {
+            background-color: #ffcccc;
+            border: 1px solid #ff6666;
+            color: #ff0000;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        .exit-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #ccc;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <button class="exit-button" onclick="redirectToGoogle()">Exit</button>
         <h1>Death Predictor</h1>
-        <form id="deathPredictorForm">
-            <input type="number" class="input-field" id="age" placeholder="Enter your age" required><br>
-            <input type="text" class="input-field" id="healthStatus" placeholder="Enter your health status (e.g., Good, Average, Poor)" required><br>
-            <button type="button" class="button submit" onclick="predictDeath()">Predict</button>
-        </form>
-        <div class="coffin">
+        <div id="formContainer">
+            <form id="deathPredictorForm">
+                <input type="number" class="input-field" id="age" placeholder="Enter your age" required><br>
+                <input type="text" class="input-field" id="healthStatus" placeholder="Enter your health status (e.g., Good, Average, Poor)" required><br>
+                <button type="button" class="button submit" onclick="submitForm()">Predict</button>
+            </form>
+        </div>
+        <div class="underage-warning" id="underageWarning">
+            You are under age. Please exit this website.
+            <button onclick="redirectToGoogle()">OK</button>
+        </div>
+        <div class="coffin" id="coffin">
   ______
  /      \
 |  RIP   |
@@ -114,10 +141,16 @@
     </div>
 
     <script>
-        function predictDeath() {
-            const age = document.getElementById('age').value;
+        function submitForm() {
+            const age = parseInt(document.getElementById('age').value);
             const healthStatus = document.getElementById('healthStatus').value;
             let resultText;
+
+            if (age < 13) {
+                document.getElementById('underageWarning').style.display = 'block';
+                document.getElementById('formContainer').style.display = 'none';
+                return;
+            }
 
             if (age && healthStatus) {
                 // Simplified prediction logic
@@ -133,9 +166,16 @@
                 deathDate.setFullYear(deathDate.getFullYear() + (100 - age));
                 resultText = `You will die on ${deathDate.toDateString()}.`;
                 document.getElementById('result').innerText = resultText;
+
+                // Show the coffin
+                document.getElementById('coffin').style.display = 'block';
             } else {
                 document.getElementById('result').innerText = "Please fill in all fields.";
             }
+        }
+
+        function redirectToGoogle() {
+            window.location.href = 'https://www.google.com';
         }
     </script>
 </body>
