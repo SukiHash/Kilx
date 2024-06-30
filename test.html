@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offline Preloader</title>
+  <style>
+    /* Basic styling for demonstration */
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    input[type="text"] {
+      width: 300px;
+      padding: 10px;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>Offline Preloader</h2>
+  <p>Enter a URL to preload:</p>
+  <input type="text" id="urlInput" placeholder="Enter URL...">
+  <button onclick="preloadUrl()">Preload</button>
+  <p id="status"></p>
+
+  <script>
+    // Register the service worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(registration => {
+          console.log('Service Worker registered:', registration);
+        })
+        .catch(error => {
+          console.error('Service Worker registration failed:', error);
+        });
+    }
+
+    // Function to preload a URL
+    function preloadUrl() {
+      const urlInput = document.getElementById('urlInput').value;
+      if (!urlInput) {
+        alert('Please enter a URL');
+        return;
+      }
+
+      fetch(urlInput)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response;
+        })
+        .then(response => response.text())
+        .then(text => {
+          console.log(`Successfully preloaded ${urlInput}`);
+          document.getElementById('status').innerText = `Successfully preloaded ${urlInput}`;
+        })
+        .catch(error => {
+          console.error('Error preloading URL:', error);
+          document.getElementById('status').innerText = `Error preloading ${urlInput}: ${error.message}`;
+        });
+    }
+  </script>
+</body>
+</html>
