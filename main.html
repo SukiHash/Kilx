@@ -71,17 +71,8 @@
         <h1>Death Predictor</h1>
         <form id="lifeExpectancyForm">
             <div class="question">
-                <label for="age">Enter your current age:</label><br>
-                <input type="number" class="input-field" id="age" required><br>
-            </div>
-            <div class="question">
-                <label for="exercise">How often do you exercise per week?</label><br>
-                <select id="exercise" class="input-field" required>
-                    <option value="">Select</option>
-                    <option value="light">Light (1-2 times)</option>
-                    <option value="moderate">Moderate (3-5 times)</option>
-                    <option value="heavy">Heavy (6+ times)</option>
-                </select><br>
+                <label for="dob">Enter your date of birth:</label><br>
+                <input type="date" class="input-field" id="dob" required><br>
             </div>
             <div class="question">
                 <label for="smoking">Do you smoke?</label><br>
@@ -99,6 +90,16 @@
                     <option value="yes">Yes</option>
                 </select><br>
             </div>
+            <div class="question">
+                <label for="exercise">How often do you exercise per week?</label><br>
+                <select id="exercise" class="input-field" required>
+                    <option value="">Select</option>
+                    <option value="none">None</option>
+                    <option value="light">Light (1-2 times)</option>
+                    <option value="moderate">Moderate (3-5 times)</option>
+                    <option value="heavy">Heavy (6+ times)</option>
+                </select><br>
+            </div>
             <button type="submit" class="button">Predict</button>
         </form>
         <div id="result" class="result"></div>
@@ -108,44 +109,73 @@
         document.getElementById('lifeExpectancyForm').addEventListener('submit', function(event) {
             event.preventDefault();
 
-            var age = parseInt(document.getElementById('age').value);
+            var dob = new Date(document.getElementById('dob').value);
             var smoking = document.getElementById('smoking').value;
             var alcohol = document.getElementById('drinking').value;
             var exercise = document.getElementById('exercise').value;
 
-            var estimatedDeathAge = calculateDeathAge(age, smoking, alcohol, exercise);
-            var deathYear = new Date().getFullYear() + (estimatedDeathAge - age);
-            document.getElementById('result').innerText = 'Estimated Year of Death: ' + deathYear;
+            var currentAge = calculateAge(dob);
+            var estimatedDeathAge = calculateDeathAge(currentAge, smoking, alcohol, exercise);
+            var deathYear = new Date().getFullYear() + estimatedDeathAge;
+
+            document.getElementById('result').innerText = `Estimated age of death: ${estimatedDeathAge} years\nEstimated year of death: ${deathYear}`;
         });
 
-        function calculateDeathAge(age, smoking, alcohol, exercise) {
-            var baseDeathAge = 85; // Base death age
-            var deathAge = baseDeathAge;
+        function calculateAge(dateOfBirth) {
+            var today = new Date();
+            var birthDate = new Date(dateOfBirth);
+            var age = today.getFullYear() - birthDate.getFullYear();
+            var m = today.getMonth() - birthDate.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            return age;
+        }
 
-            // Adjust death age based on smoking
+        function calculateDeathAge(currentAge, smoking, alcohol, exercise) {
+            let baseDeathAge = 85; // Base death age
+            let adjustedDeathAge = baseDeathAge;
+
+            // Adjust for smoking
             if (smoking === 'yes') {
-                deathAge -= 5;
+                adjustedDeathAge -= 5; // Example deduction for smokers
+            } else if (smoking === 'occasional') {
+                adjustedDeathAge -= 2; // Example deduction for occasional smokers
             }
 
-            // Adjust death age based on alcohol consumption
-            if (alcohol === 'yes') {
-                deathAge -= 3;
-            }
-
-            // Adjust death age based on exercise
-            switch (exercise) {
+            // Adjust for alcohol consumption
+            switch (alcohol) {
+                case 'no':
+                    // No deduction
+                    break;
                 case 'light':
-                    deathAge += 2;
+                    adjustedDeathAge -= 1; // Example deduction for light drinkers
                     break;
                 case 'moderate':
-                    deathAge += 5;
+                    adjustedDeathAge -= 3; // Example deduction for moderate drinkers
                     break;
                 case 'heavy':
-                    deathAge += 7;
+                    adjustedDeathAge -= 5; // Example deduction for heavy drinkers
                     break;
             }
 
-            return deathAge;
+            // Adjust for exercise
+            switch (exercise) {
+                case 'none':
+                    // No adjustment
+                    break;
+                case 'light':
+                    adjustedDeathAge += 1; // Example addition for light exercisers
+                    break;
+                case 'moderate':
+                    adjustedDeathAge += 3; // Example addition for moderate exercisers
+                    break;
+                case 'heavy':
+                    adjustedDeathAge += 5; // Example addition for heavy exercisers
+                    break;
+            }
+
+            return adjustedDeathAge;
         }
     </script>
 </body>
