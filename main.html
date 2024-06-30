@@ -11,21 +11,21 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f0f0f0;
+            background-color: #1a1a1a; /* Dark background */
             margin: 0;
         }
         .container {
             text-align: center;
-            background-color: #fff;
+            background-color: #333; /* Darker container background */
             padding: 40px;
             border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6); /* Stronger shadow */
             max-width: 600px;
             width: 90%;
             position: relative;
         }
         h1 {
-            color: #1a73e8;
+            color: #ff4d4d; /* Reddish color for title */
             margin-bottom: 20px;
         }
         .input-field {
@@ -33,8 +33,10 @@
             padding: 10px;
             width: calc(100% - 22px);
             border-radius: 5px;
-            border: 1px solid #ccc;
+            border: 1px solid #666; /* Darker border */
             font-size: 16px;
+            background-color: #444; /* Darker input background */
+            color: #ddd; /* Light text color */
         }
         .button {
             padding: 10px 20px;
@@ -43,17 +45,20 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
-            background-color: #4CAF50;
+            background-color: #ff4d4d; /* Reddish button */
             color: white;
             transition: background-color 0.3s;
         }
         .button:hover {
-            background-color: #45a049;
+            background-color: #e63946; /* Darker red on hover */
         }
         .result {
             margin-top: 20px;
-            color: #555;
+            color: #ddd; /* Light text color */
             font-size: 18px;
+            text-align: left;
+            border-top: 1px solid #666; /* Darker border */
+            padding-top: 10px;
         }
         .question {
             margin-top: 20px;
@@ -116,7 +121,10 @@
                             parts: [{
                                 text: `Predict my death based on age ${age}, health status ${healthStatus}, exercise ${exercisePerWeek} times per week, smoking ${smoking}, and drinking ${drinking}.`
                             }]
-                        }]
+                        }],
+                        usagePreferences: {
+                            educationalUse: true
+                        }
                     })
                 });
 
@@ -128,14 +136,14 @@
                 console.log('Response from AI service:', data); // Log the response to inspect in browser console
 
                 // Check if the response structure is as expected
-                if (!data || !data.generatedContent || !data.generatedContent.parts || data.generatedContent.parts.length === 0) {
+                if (!data || !data.candidates || data.candidates.length === 0 || !data.candidates[0].content || !data.candidates[0].content.parts || data.candidates[0].content.parts.length === 0) {
                     throw new Error(`Unexpected response structure from AI service. Response: ${JSON.stringify(data)}`);
                 }
 
-                const deathDate = data.generatedContent.parts[0].text;
+                const deathDate = data.candidates[0].content.parts[0].text;
 
                 // Display result
-                document.getElementById('result').innerHTML = `<p>Predicted death date: ${deathDate}</p>`;
+                document.getElementById('result').innerHTML = `<p>Predicted death information: ${deathDate}</p>`;
 
             } catch (error) {
                 console.error('Error predicting death date:', error);
