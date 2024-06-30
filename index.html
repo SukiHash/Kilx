@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accept ToS</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #eaeaea;
+        }
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #1a73e8;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        p {
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .button {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .accept {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .accept:hover {
+            background-color: #45a049;
+        }
+        .leave {
+            background-color: #f44336;
+            color: white;
+        }
+        .leave:hover {
+            background-color: #e53935;
+        }
+        .link {
+            color: #1e90ff;
+            text-decoration: none;
+        }
+        .link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Terms of Service</h1>
+        <p>Please accept the Terms of Service before entering.</p>
+        <a class="link" href="tos.html" target="_blank">Read the ToS</a><br><br>
+        <button class="button accept" onclick="acceptToS()">Accept</button>
+        <button class="button leave" onclick="leaveSite()">Leave</button>
+    </div>
+
+    <script>
+        function acceptToS() {
+            window.location.href = 'main.html';
+        }
+
+        function leaveSite() {
+            window.location.href = 'https://www.google.com';
+        }
+    </script>
+</body>
+</html>
