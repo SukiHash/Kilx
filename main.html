@@ -125,10 +125,11 @@
                 }
 
                 const data = await response.json();
+                console.log('Response from AI service:', data); // Log the response to inspect in browser console
 
                 // Check if the response structure is as expected
                 if (!data || !data.generatedContent || !data.generatedContent.parts || data.generatedContent.parts.length === 0) {
-                    throw new Error('Unexpected response structure from AI service.');
+                    throw new Error(`Unexpected response structure from AI service. Response: ${JSON.stringify(data)}`);
                 }
 
                 const deathDate = data.generatedContent.parts[0].text;
@@ -138,7 +139,7 @@
 
             } catch (error) {
                 console.error('Error predicting death date:', error);
-                document.getElementById('result').innerHTML = '<p>An error occurred while predicting death date.</p>';
+                document.getElementById('result').innerHTML = `<p>An error occurred while predicting death date. AI response: ${error.message}</p>`;
             }
         }
     </script>
