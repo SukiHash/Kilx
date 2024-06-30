@@ -125,7 +125,13 @@
                 }
 
                 const data = await response.json();
-                const deathDate = data.generatedContent.parts[0].text; // Assuming the response structure matches this
+
+                // Check if the response structure is as expected
+                if (!data || !data.generatedContent || !data.generatedContent.parts || data.generatedContent.parts.length === 0) {
+                    throw new Error('Unexpected response structure from AI service.');
+                }
+
+                const deathDate = data.generatedContent.parts[0].text;
 
                 // Display result
                 document.getElementById('result').innerHTML = `<p>Predicted death date: ${deathDate}</p>`;
