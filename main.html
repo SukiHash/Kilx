@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Death Predictor</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f7f7f7;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 90%;
+        }
+        h1 {
+            color: #1a73e8;
+            margin-bottom: 20px;
+        }
+        .input-field {
+            margin: 10px;
+            padding: 10px;
+            width: calc(100% - 22px);
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        .button {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .submit {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .submit:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            color: #555;
+            font-size: 18px;
+        }
+        .skull-art {
+            font-family: monospace;
+            white-space: pre;
+            line-height: 1;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .separator {
+            margin: 20px 0;
+            border-bottom: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Death Predictor</h1>
+        <form id="deathPredictorForm">
+            <input type="number" class="input-field" id="age" placeholder="Enter your age" required><br>
+            <input type="text" class="input-field" id="healthStatus" placeholder="Enter your health status (e.g., Good, Average, Poor)" required><br>
+            <button type="button" class="button submit" onclick="predictDeath()">Predict</button>
+        </form>
+        <div class="skull-art">
+            __xxxxxxxxxxxxxxxx___.<br>
+            _gxXXXXXXXXXXXXXXXXXXXXXXXX!x_<br>
+            __x!XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX!x_<br>
+            ,gXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx_<br>
+            ,gXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX!_<br>
+            _!XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX!.<br>
+            gXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXs<br>
+            ,!XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX!.<br>
+            g!XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX!<br>
+            iXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX!<br>
+            ,XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx<br>
+            !XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx<br>
+            ,XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx<br>
+            !XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXi<br>
+            dXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX<br>
+            XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX!<br>
+            XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX!<br>
+            XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX<br>
+            XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX<br>
+            XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX!<br>
+            XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX!<br>
+            XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX!<br>
+            XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX!<br>
+            XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX<br>
+            XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX<br>
+            XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX<br>
+            !XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX<br>
+            XXXXXXXXXXXXXXXXXXXf~~~VXXXXXXXXXXXXXXXXXXXXXXXXXXvvvvvvvvXXXXXXXXXXXXXX!<br>
+            !XXXXXXXXXXXXXXXf`       'XXXXXXXXXXXXXXXXXXXXXf`          '~XXXXXXXXXXP<br>
+            vXXXXXXXXXXXX!            !XXXXXXXXXXXXXXXXXX!              !XXXXXXXXX<br>
+            XXXXXXXXXXv`              'VXXXXXXXXXXXXXXX                !XXXXXXXX!<br>
+            !XXXXXXXXX.                 YXXXXXXXXXXXXX!                XXXXXXXXX<br>
+            XXXXXXXXX!                 ,XXXXXXXXXXXXXX                VXXXXXXX!<br>
+            'XXXXXXXX!                ,!XXXX ~~XXXXXXX               iXXXXXX~<br>
+            'XXXXXXXX               ,XXXXXX   XXXXXXXX!             xXXXXXX!<br>
+            !XXXXXXX!xxxxxxs______xXXXXXXX   'YXXXXXX!          ,xXXXXXXXX<br>
+            YXXXXXXXXXXXXXXXXXXXXXXXXXXX`    VXXXXXXX!s. __gxx!XXXXXXXXXP<br>
+            XXXXXXXXXXXXXXXXXXXXXXXXXX!      'XXXXXXXXXXXXXXXXXXXXXXXXX!<br>
+            XXXXXXXXXXXXXXXXXXXXXXXXXP        'YXXXXXXXXXXXXXXXXXXXXXXX!<br>
+            XXXXXXXXXXXXXXXXXXXXXXXX!     i    !XXXXXXXXXXXXXXXXXXXXXXXX<br>
+            XXXXXXXXXXXXXXXXXXXXXXXX!     XX   !XXXXXXXXXXXXXXXXXXXXXXXX<br>
+            XXXXXXXXXXXXXXXXXXXXXXXXx_   iXX_,_dXXXXXXXXXXXXXXXXXXXXXXXX<br>
+            XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXP<br>
+            XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX!<br>
+            ~vXvvvvXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXf<br>
+            'VXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXvvvvvv~<br>
+            'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~<br>
+            _    XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXv`<br>
+            -XX!  !XXXXXXX~XXXXXXXXXXXXXXXXXXXXXX~   Xxi<br>
+            YXX  '~ XXXXX XXXXXXXXXXXXXXXXXXXX`     iXX`<br>
+            !XX!    !XXX` XXXXXXXXXXXXXXXXXXXX      !XX<br>
+            !XXX    '~Vf  YXXXXXXXXXXXXXP YXXX     !XXX<br>
+            !XXX  ,_      !XXP YXXXfXXXX!  XXX     XXXV<br>
+            !XXX !XX           'XXP 'YXX!       ,.!XXX!<br>
+            !XXXi!XP  XX.                  ,_  !XXXXXX!<br>
+            iXXXx X!  XX! !Xx.  ,.     xs.,XXi !XXXXXXf<br>
+            XXXXXXXXXXXXXXXXX! _!XXx  dXXXXXXX.iXXXXXX<br>
+            VXXXXXXXXXXXXXXXXXXXXXXXxxXXXXXXXXXXXXXXX!<br>
+            YXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXV<br>
+            'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX!<br>
+            'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXf<br>
+            VXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXf<br>
+            ~vXXXXXXXXXXXXXXXXXXXXXXXf`<br>
+            '~VvXXXXXXXV~~<br>
+            ~~<br>
+        </div>
+        <div class="separator"></div>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function predictDeath() {
+            const age = document.getElementById('age').value;
+            const healthStatus = document.getElementById('healthStatus').value;
+            let resultText;
+
+            if (age && healthStatus) {
+                // Simplified prediction logic
+                if (age > 80) {
+                    resultText = "High risk of death.";
+                } else if (age > 50 && healthStatus.toLowerCase() === 'poor') {
+                    resultText = "Moderate risk of death.";
+                } else {
+                    resultText = "Low risk of death.";
+                }
+
+                const deathDate = new Date();
+                deathDate.setFullYear(deathDate.getFullYear() + (100 - age));
+                resultText = `You will die on ${deathDate.toDateString()}.`;
+                document.getElementById('result').innerText = resultText;
+            } else {
+                document.getElementById('result').innerText = "Please fill in all fields.";
+            }
+        }
+    </script>
+</body>
+</html>
